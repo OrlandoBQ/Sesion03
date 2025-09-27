@@ -1,0 +1,276 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{% if form.instance.articulo_id %}Editar{% else %}Nuevo{% endif %} Artículo - Sistema POS
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1>
+            {% if form.instance.articulo_id %}Editar{% else %}Nuevo{% endif %} Artículo
+        </h1>
+        <a href="{% url 'articulo_list' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Volver
+        </a>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h3>Información del Artículo</h3>
+        </div>
+        
+        <div class="card-body">
+            <form method="post" action="">
+                {% csrf_token %}
+                
+                <!-- Errores generales del formulario -->
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        <ul>
+                            {% for error in form.non_field_errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+
+                <!-- Información básica del artículo -->
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="{{ form.codigo_articulo.id_for_label }}">Código de Artículo*</label>
+                            {{ form.codigo_articulo }}
+                            {% for error in form.codigo_articulo.errors %}
+                                <div class="text-danger">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="{{ form.codigo_barras.id_for_label }}">Código de Barras</label>
+                            {{ form.codigo_barras }}
+                            {% for error in form.codigo_barras.errors %}
+                                <div class="text-danger">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <label for="{{ form.descripcion.id_for_label }}">Descripción*</label>
+                            {{ form.descripcion }}
+                            {% for error in form.descripcion.errors %}
+                                <div class="text-danger">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="{{ form.presentacion.id_for_label }}">Presentación</label>
+                            {{ form.presentacion }}
+                            {% for error in form.presentacion.errors %}
+                                <div class="text-danger">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Clasificación -->
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="{{ form.grupo.id_for_label }}">Grupo*</label>
+                            <select name="{{ form.grupo.name }}" id="{{ form.grupo.id_for_label }}" class="form-control">
+                                <option value="">Seleccione un grupo</option>
+                                {% for choice in form.grupo.field.queryset %}
+                                    <option value="{{ choice.pk }}">{{ choice }}</option>
+                                {% endfor %}
+                            </select>
+                            {% for error in form.grupo.errors %}
+                                <div class="text-danger">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="{{ form.linea.id_for_label }}">Línea*</label>
+                            <select name="{{ form.linea.name }}" id="{{ form.linea.id_for_label }}" class="form-control">
+                                <option value="">Seleccione una línea</option>
+                                {% for choice in form.linea.field.queryset %}
+                                    <option value="{{ choice.pk }}">{{ choice }}</option>
+                                {% endfor %}
+                            </select>
+                            {% for error in form.linea.errors %}
+                                <div class="text-danger">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stock -->
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="{{ form.stock.id_for_label }}">Stock Inicial</label>
+                            {{ form.stock }}
+                            {% for error in form.stock.errors %}
+                                <div class="text-danger">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Precios -->
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h4>Precios</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ precio_form.precio_1.id_for_label }}">Precio 1*</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">$</span>
+                                        </div>
+                                        {{ precio_form.precio_1 }}
+                                    </div>
+                                    {% for error in precio_form.precio_1.errors %}
+                                        <div class="text-danger">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ precio_form.precio_2.id_for_label }}">Precio 2</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">$</span>
+                                        </div>
+                                        {{ precio_form.precio_2 }}
+                                    </div>
+                                    {% for error in precio_form.precio_2.errors %}
+                                        <div class="text-danger">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ precio_form.precio_3.id_for_label }}">Precio 3</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">$</span>
+                                        </div>
+                                        {{ precio_form.precio_3 }}
+                                    </div>
+                                    {% for error in precio_form.precio_3.errors %}
+                                        <div class="text-danger">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ precio_form.precio_4.id_for_label }}">Precio 4</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">$</span>
+                                        </div>
+                                        {{ precio_form.precio_4 }}
+                                    </div>
+                                    {% for error in precio_form.precio_4.errors %}
+                                        <div class="text-danger">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ precio_form.precio_compra.id_for_label }}">Precio de Compra*</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">$</span>
+                                        </div>
+                                        {{ precio_form.precio_compra }}
+                                    </div>
+                                    {% for error in precio_form.precio_compra.errors %}
+                                        <div class="text-danger">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="{{ precio_form.precio_costo.id_for_label }}">Precio de Costo*</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">$</span>
+                                        </div>
+                                        {{ precio_form.precio_costo }}
+                                    </div>
+                                    {% for error in precio_form.precio_costo.errors %}
+                                        <div class="text-danger">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Botones de acción -->
+                <div class="form-actions mt-4">
+                    <a href="{% url 'articulo_list' %}" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Cancelar
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Guardar Artículo
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // Validación del formulario
+    validarFormulario('articuloForm');
+
+    // Cargar líneas según el grupo seleccionado
+    const grupoSelect = document.getElementById('{{ form.grupo.id_for_label }}');
+    const lineaSelect = document.getElementById('{{ form.linea.id_for_label }}');
+
+    if (grupoSelect && lineaSelect) {
+        grupoSelect.addEventListener('change', function() {
+            // Aquí implementarías la lógica para cargar líneas según el grupo
+            // Normalmente esto se haría mediante una petición AJAX al servidor
+            // Ejemplo simplificado:
+            const grupoId = this.value;
+            if (grupoId) {
+                // Código de ejemplo - en un caso real, harías una petición AJAX
+                // fetch(`/api/lineas-por-grupo/${grupoId}/`)
+                //     .then(resp => resp.json())
+                //     .then(data => {
+                //         // Llenar el select de líneas
+                //     });
+            }
+        });
+    }
+});
+</script>
+{% endblock %}
